@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alba Núñez | Inversiones Inmobiliarias</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        :root {
+            --navy: #0b1522; /* El color de fondo de tu logo */
+            --gold: #c5a059; /* El tono dorado de tu logo */
+            --white: #ffffff;
+        }
+
+        body {
+            background-color: var(--navy);
+            font-family: 'Montserrat', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .card-container {
+            background: var(--navy);
+            width: 100%;
+            max-width: 400px;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            border: 1px solid var(--gold);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .logo-img {
+            width: 150px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+        h1 { font-family: 'Playfair Display', serif; color: var(--gold); margin: 10px 0; font-size: 1.8rem; }
+        .subtitle { color: var(--white); font-weight: 300; letter-spacing: 2px; font-size: 0.9rem; margin-bottom: 30px; }
+
+        .actions { display: grid; gap: 15px; }
+        
+        .btn {
+            padding: 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.3s;
+            display: block;
+            border: 1px solid var(--gold);
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+
+        .btn-main { background: var(--gold); color: var(--navy); }
+        .btn-main:hover { background: transparent; color: var(--gold); }
+        
+        .btn-outline { background: transparent; color: var(--gold); }
+        .btn-outline:hover { background: var(--gold); color: var(--navy); }
+
+        .footer { margin-top: 30px; font-size: 0.7rem; color: var(--gold); opacity: 0.7; }
+    </style>
+</head>
+<body>
+
+    <div class="card-container">
+        <img src="logo.png" alt="Logo Alba Núñez" class="logo-img">
+        
+        <h1>Alba Núñez</h1>
+        <p class="subtitle">INVERSIONISTA EN BIENES RAÍCES</p>
+
+        <div class="actions">
+            <a href="tel:+16614931733" class="btn btn-main">
+                <i class="fa-solid fa-phone"></i> Llamar
+            </a>
+            
+            <a href="https://wa.me/16614931733" class="btn btn-outline">
+                <i class="fa-brands fa-whatsapp"></i> WhatsApp
+            </a>
+            
+            <button onclick="downloadVCard()" class="btn btn-outline">
+                <i class="fa-solid fa-user-plus"></i> Guardar Contacto
+            </button>
+        </div>
+
+        <div class="footer">ESTRATEGIAS DE INVERSIÓN INTELIGENTE</div>
+    </div>
+
+    <script>
+        function downloadVCard() {
+            const vcard = "BEGIN:VCARD\nVERSION:3.0\nFN:Alba Nunez\nORG:Inversiones Inmobiliarias\nTITLE:Real Estate Investor\nTEL;TYPE=CELL:+16614931733\nEND:VCARD";
+            const blob = new Blob([vcard], { type: "text/vcard" });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'Alba_Nunez.vcf';
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>
