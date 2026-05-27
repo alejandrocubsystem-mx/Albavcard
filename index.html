@@ -156,40 +156,44 @@
                 const response = await fetch('logo.txt');
                 let base64Logo = await response.text();
                 
+                // Limpieza absoluta de cualquier caracter o salto que rompa iOS
                 base64Logo = base64Logo.replace(/^data:image\/(png|jpeg|jpg);base64,/, '').replace(/\s/g, '');
                 
-                const vcardContent = [
+                // Estructura compatible con vCard 3.0 estándar de Apple
+                const vcardLines = [
                     "BEGIN:VCARD",
                     "VERSION:3.0",
                     "FN:Alba Nuñez",
+                    "N:Nuñez;Alba;;;",
                     "ORG:ALBA Investment",
                     "TITLE:Real Estate Investor",
-                    "TEL;TYPE=CELL:+16614931733",
-                    "PHOTO;TYPE=PNG;ENCODING=BASE64:" + base64Logo,
+                    "TEL;TYPE=CELL;TYPE=PREF:+16614931733",
+                    "PHOTO;TYPE=PNG;ENCODING=b:" + base64Logo,
                     "END:VCARD"
-                ].join("\r\n");
+                ];
 
-                const blob = new Blob([vcardContent], { type: "text/vcard;charset=utf-8" });
-                const url = URL.createObjectURL(blob);
+                const vcardContent = vcardLines.join("\r\n");
+
+                // En lugar de un Blob binario, usamos Data URL con base64 para engañar al WebKit de iOS
                 const link = document.createElement('a');
-                link.href = url;
+                link.href = 'data:text/vcard;charset=utf-8;base64,' + btoa(unescape(encodeURIComponent(vcardContent)));
                 link.download = "Alba_Nunez.vcf";
                 link.click();
-                URL.revokeObjectURL(url);
             } catch (err) {
+                // Fallback simplificado si la carga del archivo de imagen falla
                 const vcardSimple = [
                     "BEGIN:VCARD",
                     "VERSION:3.0",
                     "FN:Alba Nuñez",
+                    "N:Nuñez;Alba;;;",
                     "ORG:ALBA Investment",
                     "TITLE:Real Estate Investor",
-                    "TEL;TYPE=CELL:+16614931733",
+                    "TEL;TYPE=CELL;TYPE=PREF:+16614931733",
                     "END:VCARD"
                 ].join("\r\n");
-                const blob = new Blob([vcardSimple], { type: "text/vcard;charset=utf-8" });
-                const url = URL.createObjectURL(blob);
+                
                 const link = document.createElement('a');
-                link.href = url;
+                link.href = 'data:text/vcard;charset=utf-8;base64,' + btoa(unescape(encodeURIComponent(vcardSimple)));
                 link.download = "Alba_Nunez.vcf";
                 link.click();
             }
