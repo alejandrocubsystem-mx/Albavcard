@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ALBA Investment | Professional Profile</title>
+    <title>ALBA Investment | Contact</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         :root {
             --primary: #2d6a7d;
@@ -21,49 +22,58 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: 20px;
+            padding: 10px;
         }
 
         .card {
             background: #ffffff;
             width: 100%;
             max-width: 400px;
-            padding: 40px;
+            padding: 25px 20px;
             border-radius: 30px;
-            box-shadow: 0 30px 60px -12px rgba(45, 106, 125, 0.1);
+            box-shadow: 0 20px 40px -10px rgba(45, 106, 125, 0.15);
             text-align: center;
-            border: 1px solid rgba(0,0,0,0.05);
         }
 
-        .logo-img { max-width: 180px; margin-bottom: 25px; }
-        h1 { color: var(--primary); font-size: 1.4rem; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; }
-        .divider { width: 40px; height: 3px; background: var(--accent); margin: 15px auto 30px; }
+        .logo-img { max-width: 220px; margin-bottom: 15px; } 
+        .divider { width: 40px; height: 3px; background: var(--accent); margin: 0 auto 15px; }
 
-        /* Botones */
-        .actions { display: flex; flex-direction: column; gap: 12px; margin-bottom: 35px; }
-        .btn {
-            width: 100%; padding: 15px; border-radius: 12px; border: none; font-weight: 700;
-            font-size: 0.85rem; cursor: pointer; text-transform: uppercase; transition: 0.3s;
-        }
-        .btn-save { background: var(--accent); color: #fff; } /* Color Oro Rosa */
-        .btn-call { background: var(--primary); color: #fff; }
-        .btn span { display: block; font-size: 0.7rem; font-weight: 400; opacity: 0.9; margin-top: 2px; }
+        /* Contenido compactado */
+        .content-wrapper { margin-top: 5px; }
 
-        /* Sección de Servicios */
-        .services-title { 
-            font-size: 0.7rem; color: #94a3b8; text-transform: uppercase; 
-            letter-spacing: 2px; margin-bottom: 15px; font-weight: 700; 
+        .btn-save { 
+            display: inline-block;
+            padding: 10px 25px; 
+            border-radius: 10px; 
+            border: none; 
+            font-weight: 700;
+            font-size: 0.75rem; 
+            cursor: pointer; 
+            text-transform: uppercase; 
+            transition: 0.3s;
+            background: var(--accent); 
+            color: #fff; 
+            margin-bottom: 15px;
         }
-        .services-container { display: grid; grid-template-columns: 1fr; gap: 10px; }
+        .btn-save span { display: block; font-size: 0.65rem; font-weight: 400; opacity: 0.9; margin-top: 2px; }
+
+        .contact-section { margin-bottom: 15px; }
+        .social-row { display: flex; justify-content: center; align-items: center; gap: 25px; margin-bottom: 15px; }
+        .icon-btn { 
+            width: 45px; height: 45px; border-radius: 50%; border: 1px solid #e2e8f0;
+            display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
+            text-decoration: none; transition: 0.3s;
+        }
+        .fa-phone { color: var(--primary); }
+        .fa-whatsapp { color: #25d366; }
+        
+        .services-title { font-size: 0.65rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 2px; font-weight: 700; }
+        
+        .services-container { display: grid; grid-template-columns: 1fr; gap: 6px; margin-top: 8px; }
         .service-card {
-            padding: 14px;
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 10px;
-            color: var(--primary);
-            font-size: 0.8rem;
-            font-weight: 600;
-            text-transform: uppercase;
+            padding: 8px; background: #f8fafc; border: 1px solid #e2e8f0;
+            border-radius: 8px; color: var(--primary); font-size: 0.75rem;
+            font-weight: 600; text-transform: uppercase;
         }
     </style>
 </head>
@@ -71,22 +81,27 @@
 
     <div class="card">
         <img src="logo1.png" alt="ALBA Investment" class="logo-img">
-        <h1>ALBA Investment</h1>
         <div class="divider"></div>
 
-        <div class="actions">
-            <button onclick="downloadVCard()" class="btn btn-save">
+        <div class="content-wrapper">
+            <button onclick="downloadVCard()" class="btn-save">
                 SAVE CONTACT
                 <span>+1 (661) 493-1733</span>
             </button>
-            <a href="tel:+16614931733" class="btn btn-call">CALL NOW</a>
-        </div>
 
-        <div class="services-title">Services</div>
-        <div class="services-container">
-            <div class="service-card">Real Estate Investment</div>
-            <div class="service-card">Fix and Flip</div>
-            <div class="service-card">Buy and Hold</div>
+            <div class="contact-section">
+                <div class="social-row">
+                    <a href="tel:+16614931733" class="icon-btn"><i class="fa-solid fa-phone"></i></a>
+                    <div class="services-title">Services</div>
+                    <a href="https://wa.me/16614931733" class="icon-btn"><i class="fa-brands fa-whatsapp"></i></a>
+                </div>
+
+                <div class="services-container">
+                    <div class="service-card">Real Estate Investment</div>
+                    <div class="service-card">Fix and Flip</div>
+                    <div class="service-card">Buy and Hold</div>
+                </div>
+            </div>
         </div>
     </div>
 
