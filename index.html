@@ -156,24 +156,25 @@
                 const response = await fetch('logo.txt');
                 let base64Logo = await response.text();
                 
-                // Limpieza estricta para asegurar que sea SOLO la cadena base64 limpia en una sola línea
+                // Limpieza total del Base64
                 base64Logo = base64Logo.replace(/^data:image\/(png|jpeg|jpg);base64,/, '').replace(/\s/g, '');
                 
-                // Usamos versión 2.1, que es la que mejor procesa imágenes locales en el ecosistema Apple viejo y nuevo
+                // Usamos vCard 3.0 pero inyectando el CHARSET=UTF-8 de forma explícita para obligar a iOS a leer la Ñ correctamente
                 const vcardContent = [
                     "BEGIN:VCARD",
-                    "VERSION:2.1",
-                    "FN:Alba Nuñez",
-                    "N:Nuñez;Alba",
+                    "VERSION:3.0",
+                    "FN;CHARSET=UTF-8:Alba Nuñez",
+                    "N;CHARSET=UTF-8:Nuñez;Alba;;;",
                     "ORG:ALBA Investment",
                     "TITLE:Real Estate Investor",
-                    "TEL;CELL;PREF:+16614931733",
-                    "PHOTO;JPEG;ENCODING=BASE64:" + base64Logo, // iOS responde mejor si se le fuerza como JPEG o PNG plano en 2.1
+                    "TEL;TYPE=CELL,VOICE;TYPE=PREF:+16614931733",
+                    "PHOTO;TYPE=PNG;ENCODING=b:" + base64Logo,
                     "END:VCARD"
                 ].join("\r\n");
 
-                // Creamos un Blob plano pero forzando el tipo binario octet-stream para que iOS lo descargue como archivo nativo y no como texto de Safari
-                const blob = new Blob([vcardContent], { type: "text/x-vcard;charset=utf-8" });
+                // Para iPhone, la descarga directa de un Blob a veces corrompe los caracteres. 
+                // Convertir todo a un objeto Blob real con tipo mime correcto fuerza al lector nativo de iOS.
+                const blob = new Blob([vcardContent], { type: "text/vcard;charset=utf-8" });
                 const url = URL.createObjectURL(blob);
                 const link = document.createElement('a');
                 link.href = url;
@@ -181,22 +182,24 @@
                 link.click();
                 URL.revokeObjectURL(url);
             } catch (err) {
+                // Fallback sin foto si falla la carga del txt
                 const vcardSimple = [
                     "BEGIN:VCARD",
-                    "VERSION:2.1",
-                    "FN:Alba Nuñez",
-                    "N:Nuñez;Alba",
+                    "VERSION:3.0",
+                    "FN;CHARSET=UTF-8:Alba Nuñez",
+                    "N;CHARSET=UTF-8:Nuñez;Alba;;;",
                     "ORG:ALBA Investment",
                     "TITLE:Real Estate Investor",
-                    "TEL;CELL;PREF:+16614931733",
+                    "TEL;TYPE=CELL,VOICE;TYPE=PREF:+16614931733",
                     "END:VCARD"
                 ].join("\r\n");
-                const blob = new Blob([vcardSimple], { type: "text/x-vcard;charset=utf-8" });
+                const blob = new Blob([vcardSimple], { type: "text/vcard;charset=utf-8" });
                 const url = URL.createObjectURL(blob);
                 const link = document.createElement('a');
                 link.href = url;
                 link.download = "Alba_Nunez.vcf";
                 link.click();
+                URL.revokeObjectURL(url);
             }
         }
     </script>
