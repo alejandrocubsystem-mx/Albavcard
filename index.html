@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ALBA Investment | Contact</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2d6a7d;
+            --accent: #c0907d;
+            --bg: #f4f7f6;
+            --text-main: #1e293b;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background-color: var(--bg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 10px;
+        }
+
+        .card {
+            background: #ffffff;
+            width: 100%;
+            max-width: 400px;
+            padding: 25px 20px;
+            border-radius: 30px;
+            box-shadow: 0 20px 40px -10px rgba(45, 106, 125, 0.15);
+            text-align: center;
+        }
+
+        .logo-img { max-width: 220px; margin-bottom: 15px; } 
+        .divider { width: 40px; height: 3px; background: var(--accent); margin: 0 auto 15px; }
+
+        /* Contenido compactado */
+        .content-wrapper { margin-top: 5px; }
+
+        .btn-save { 
+            display: inline-block;
+            padding: 10px 25px; 
+            border-radius: 10px; 
+            border: none; 
+            font-weight: 700;
+            font-size: 0.75rem; 
+            cursor: pointer; 
+            text-transform: uppercase; 
+            transition: 0.3s;
+            background: var(--accent); 
+            color: #fff; 
+            margin-bottom: 15px;
+        }
+        .btn-save span { display: block; font-size: 0.65rem; font-weight: 400; opacity: 0.9; margin-top: 2px; }
+
+        .contact-section { margin-bottom: 15px; }
+        .social-row { display: flex; justify-content: center; align-items: center; gap: 25px; margin-bottom: 15px; }
+        .icon-btn { 
+            width: 45px; height: 45px; border-radius: 50%; border: 1px solid #e2e8f0;
+            display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
+            text-decoration: none; transition: 0.3s;
+        }
+        .fa-phone { color: var(--primary); }
+        .fa-whatsapp { color: #25d366; }
+        
+        .services-title { font-size: 0.65rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 2px; font-weight: 700; }
+        
+        .services-container { display: grid; grid-template-columns: 1fr; gap: 6px; margin-top: 8px; }
+        .service-card {
+            padding: 8px; background: #f8fafc; border: 1px solid #e2e8f0;
+            border-radius: 8px; color: var(--primary); font-size: 0.75rem;
+            font-weight: 600; text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <img src="logo1.png" alt="ALBA Investment" class="logo-img">
+        <div class="divider"></div>
+
+        <div class="content-wrapper">
+            <button onclick="downloadVCard()" class="btn-save">
+                SAVE CONTACT
+                <span>+1 (661) 493-1733</span>
+            </button>
+
+            <div class="contact-section">
+                <div class="social-row">
+                    <a href="tel:+16614931733" class="icon-btn"><i class="fa-solid fa-phone"></i></a>
+                    <div class="services-title">Services</div>
+                    <a href="https://wa.me/16614931733" class="icon-btn"><i class="fa-brands fa-whatsapp"></i></a>
+                </div>
+
+                <div class="services-container">
+                    <div class="service-card">Real Estate Investment</div>
+                    <div class="service-card">Fix and Flip</div>
+                    <div class="service-card">Buy and Hold</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function downloadVCard() {
+            try {
+                const response = await fetch('logo.txt');
+                const base64Logo = await response.text();
+                
+                const vcardContent = [
+                    "BEGIN:VCARD",
+                    "VERSION:3.0",
+                    "FN:ALBA Investment",
+                    "ORG:ALBA Investment",
+                    "TEL;TYPE=CELL:+16614931733",
+                    "NOTE:Investment services: Real Estate, Fix and Flip, Buy and Hold.",
+                    "PHOTO;ENCODING=b;TYPE=PNG:" + base64Logo.trim(),
+                    "END:VCARD"
+                ].join("\n");
+
+                const blob = new Blob([vcardContent], { type: "text/vcard" });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = "ALBA_Investment.vcf";
+                link.click();
+                URL.revokeObjectURL(url);
+            } catch (err) {
+                alert("Ensure 'logo.txt' is available in the server.");
+            }
+        }
+    </script>
+</body>
+</html>
