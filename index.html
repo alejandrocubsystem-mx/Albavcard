@@ -1,10 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8"> <!-- CRUCIAL PARA LA Ñ -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alba Nuñez | Real Estate Investor</title>
+    <!-- Iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Fuente -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    
     <style>
         :root {
             --primary: #2d6a7d;
@@ -16,7 +20,7 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Inter', -apple-system, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background-color: var(--bg);
             display: flex;
             justify-content: center;
@@ -41,6 +45,7 @@
             max-width: 280px; 
             height: auto;
             margin-bottom: 20px; 
+            border-radius: 10px; /* Opcional: bordes suaves al logo */
         }
 
         .profile-info { margin-bottom: 30px; }
@@ -78,11 +83,11 @@
 
         .btn-save { 
             display: inline-block;
-            padding: 12px 30px; 
+            padding: 15px 30px; 
             border-radius: 12px; 
             border: none; 
             font-weight: 700;
-            font-size: 0.8rem; 
+            font-size: 0.9rem; 
             cursor: pointer; 
             text-transform: uppercase; 
             transition: 0.3s;
@@ -90,8 +95,19 @@
             color: #fff; 
             margin-bottom: 25px;
             box-shadow: 0 4px 15px rgba(192, 144, 125, 0.3);
+            width: 100%;
         }
-        .btn-save span { display: block; font-size: 0.7rem; font-weight: 400; opacity: 0.9; margin-top: 2px; }
+        .btn-save:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(192, 144, 125, 0.4);
+        }
+        .btn-save span { 
+            display: block; 
+            font-size: 0.75rem; 
+            font-weight: 400; 
+            opacity: 0.9; 
+            margin-top: 4px; 
+        }
 
         .social-row { 
             display: flex; 
@@ -126,7 +142,8 @@
 <body>
 
     <div class="card">
-        <img src="logo1.png" alt="ALBA Nuñez" class="logo-img">
+        <!-- Asegúrate de tener una imagen llamada logo.png o cambia el src aquí -->
+        <img src="logo1.png" alt="Logo Alba Nuñez" class="logo-img">
         
         <div class="profile-info">
             <h1 class="name">Alba Nuñez</h1>
@@ -141,7 +158,7 @@
         </button>
 
         <div class="social-row">
-            <a href="tel:+16614931733" class="icon-btn" title="Call Now">
+            <a href="tel:+16614931733" class="icon-btn" title="Llamar Ahora">
                 <i class="fa-solid fa-phone"></i>
             </a>
             <a href="https://wa.me/16614931733" class="icon-btn" title="WhatsApp">
@@ -153,51 +170,86 @@
     <script>
         async function downloadVCard() {
             try {
+                // 1. Cargar el archivo logo.txt
                 const response = await fetch('logo.txt');
+                if (!response.ok) throw new Error("No se pudo cargar logo.txt");
+                
                 let base64Logo = await response.text();
                 
-                // Limpieza total del Base64
-                base64Logo = base64Logo.replace(/^data:image\/(png|jpeg|jpg);base64,/, '').replace(/\s/g, '');
-                
-                // Usamos vCard 3.0 pero inyectando el CHARSET=UTF-8 de forma explícita para obligar a iOS a leer la Ñ correctamente
+                // 2. Limpieza robusta: eliminar prefijos data URI, espacios, saltos de línea
+                base64Logo = base64Logo.replace(/^data:image\/(png|jpeg|jpg);base64,/, '')
+                                       .replace(/\s/g, '')
+                                       .trim();
+
+                if (!base64Logo) throw new Error("El archivo logo.txt está vacío o corrupto");
+
+                // 3. Detectar tipo de imagen por los primeros caracteres
+                // PNG empieza con iVBORw0KGgo
+                // JPEG empieza con /9j/
+                let imageType = 'JPEG'; // Default
+                if (base64Logo.startsWith('iVBORw0KGgo')) {
+                    imageType = 'PNG';
+                } else if (base64Logo.startsWith('/9j/')) {
+                    imageType = 'JPEG';
+                } else {
+                    console.warn("Formato de imagen no reconocido, asumiendo JPEG");
+                }
+
+                // 4. Construir vCard 3.0 con CHARSET=UTF-8 explícito para cada campo
+                // Esto soluciona el problema de la "Ñ" que aparecía como "√±"
                 const vcardContent = [
                     "BEGIN:VCARD",
                     "VERSION:3.0",
-                    "FN;CHARSET=UTF-8:Alba Nuñez",
-                    "N;CHARSET=UTF-8:Nuñez;Alba;;;",
-                    "ORG:ALBA Investment",
-                    "TITLE:Real Estate Investor",
-                    "TEL;TYPE=CELL,VOICE;TYPE=PREF:+16614931733",
-                    "PHOTO;TYPE=PNG;ENCODING=b:" + base64Logo,
+                    "PRODID:-//Alba Investment//NONSGML vCard//EN",
+                    "FN;CHARSET=UTF-8:Alba Nuñez",       // Nombre completo
+                    "N;CHARSET=UTF-8:Nuñez;Alba;;;",     // Apellido;Nombre;;;
+                    "ORG;CHARSET=UTF-8:ALBA Investment", // Organización
+                    "TITLE;CHARSET=UTF-8:Real Estate Investor", // Título
+                    "TEL;TYPE=CELL,VOICE;TYPE=PREF:+16614931733", // Teléfono
+                    "PHOTO;ENCODING=b;TYPE=" + imageType + ":" + base64Logo, // Foto
                     "END:VCARD"
                 ].join("\r\n");
 
-                // Para iPhone, la descarga directa de un Blob a veces corrompe los caracteres. 
-                // Convertir todo a un objeto Blob real con tipo mime correcto fuerza al lector nativo de iOS.
-                const blob = new Blob([vcardContent], { type: "text/vcard;charset=utf-8" });
+                // 5. Crear Blob con codificación UTF-8 explícita
+                // Usamos TextEncoder para garantizar que los bytes sean UTF-8 correcto
+                const encoder = new TextEncoder();
+                const uint8Array = encoder.encode(vcardContent);
+                const blob = new Blob([uint8Array], { type: "text/vcard;charset=utf-8" });
+                
+                // 6. Descargar el archivo
                 const url = URL.createObjectURL(blob);
                 const link = document.createElement('a');
                 link.href = url;
                 link.download = "Alba_Nunez.vcf";
+                document.body.appendChild(link); // Necesario para Firefox
                 link.click();
+                document.body.removeChild(link);
                 URL.revokeObjectURL(url);
+                
+                console.log("✅ Contacto generado correctamente con foto y nombre correcto.");
+
             } catch (err) {
-                // Fallback sin foto si falla la carga del txt
+                console.error("❌ Error:", err);
+                alert("Hubo un error al generar el contacto. Verifica que 'logo.txt' contenga una imagen Base64 válida.");
+                
+                // Fallback: Generar vCard sin foto pero con nombre correcto
                 const vcardSimple = [
                     "BEGIN:VCARD",
                     "VERSION:3.0",
                     "FN;CHARSET=UTF-8:Alba Nuñez",
                     "N;CHARSET=UTF-8:Nuñez;Alba;;;",
-                    "ORG:ALBA Investment",
-                    "TITLE:Real Estate Investor",
+                    "ORG;CHARSET=UTF-8:ALBA Investment",
+                    "TITLE;CHARSET=UTF-8:Real Estate Investor",
                     "TEL;TYPE=CELL,VOICE;TYPE=PREF:+16614931733",
                     "END:VCARD"
                 ].join("\r\n");
-                const blob = new Blob([vcardSimple], { type: "text/vcard;charset=utf-8" });
+                
+                const encoder = new TextEncoder();
+                const blob = new Blob([encoder.encode(vcardSimple)], { type: "text/vcard;charset=utf-8" });
                 const url = URL.createObjectURL(blob);
                 const link = document.createElement('a');
                 link.href = url;
-                link.download = "Alba_Nunez.vcf";
+                link.download = "Alba_Nunez_SinFoto.vcf";
                 link.click();
                 URL.revokeObjectURL(url);
             }
